@@ -1,0 +1,1 @@
+<view class="container gar-flex"><page-head wx:if="{{a}}" u-i="145104ae-0" bind:__l="__l" u-p="{{a}}"></page-head><view wx:for="{{b}}" wx:for-item="item" wx:key="c" class="item"><navigator url="{{item.b}}"><view><image class="item-image" src="/static/logo.png" mode="aspectFill"></image></view><view>{{item.a}}</view></navigator></view></view>
