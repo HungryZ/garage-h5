@@ -4,20 +4,24 @@
 		<view>
 			<form @submit="formSubmit" @reset="formReset">
 				<div class="hint">基础信息</div>
-				<view class="uni-form-item gar-flex-row" v-for="item in items">
-					<view class="title">{{item.title}}</view>
+				<view class="basic-item gar-flex" v-for="item in items">
+					<view class="gar-title">{{item.title}}</view>
 					<input class="uni-input" :name="item.name" placeholder="placeholder" />
 				</view>
 				<div class="gar-flex" style="padding-top: 30rpx;">
 					<div class="hint">项目</div>
-					<div class="add-button" @click="addRepairItemClicked()">添加</div>
+					<div class="add-button" @click="addRepairItemClicked()">添加></div>
 				</div>
-				<view class="uni-form-item gar-flex-row" v-for="repairItem in repairItems">
-					<view class="title">{{repairItem.title}}</view>
+				<view class="repair-item gar-flex" v-for="repairItem in repairItems">
+					<view class="gar-title">{{repairItem.title}}</view>
+					<view class="title">¥{{repairItem.price}}</view>
+				</view>
+				<view class="repair-item gar-flex">
+					<view class="gar-title">合计</view>
+					<view class="title">¥10000</view>
 				</view>
 				<view class="uni-btn-v">
 					<button form-type="submit">Submit</button>
-					<button type="default" form-type="reset">Reset</button>
 				</view>
 			</form>
 		</view>
@@ -49,7 +53,7 @@
 					name: 'mileage',
 					check: null,
 				}],
-				repairItems: [],
+				repairItem: null,
 			}
 		},
 		methods: {
@@ -90,11 +94,19 @@
 					});
 				}
 			},
-			formReset: function(e) {
-				console.log('清空数据')
-			},
 			addRepairItemClicked() {
-				console.log('addRepairItemClicked')
+				let that = this
+				uni.navigateTo({
+					url: '../repair_item/repair_item',
+					events: {
+						// 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+						selectRepairItem: function(data) {
+							that.repairItem = data
+							console.log(that.repairItem)
+							that.$forceUpdate()
+						},
+					},
+				});
 			},
 		}
 	}
@@ -107,24 +119,28 @@
 		color: gray;
 	}
 
+	.basic-item {
+		border-bottom: 1rpx solid lightgray;
+		padding: 8rpx 25rpx;
+	}
+
+	.uni-input {
+		font-size: 36rpx;
+		text-align: right;
+	}
+
 	.add-button {
 		color: royalblue;
 		border-bottom: 1rpx solid royalblue;
 		margin-right: 10rpx;
 	}
 
-	.uni-form-item {
-		border-bottom: 1rpx solid lightgray;
-		padding: 8rpx 10rpx;
+	.repair-item {
+		padding: 8rpx 25rpx;
+		flex-wrap: nowrap;
 	}
 
-	.title {
-		margin: 0 10rpx;
-		width: 150rpx;
-		font-size: 36rpx;
-	}
-
-	.uni-input {
-		font-size: 36rpx;
+	.uni-btn-v {
+		margin: 50rpx;
 	}
 </style>

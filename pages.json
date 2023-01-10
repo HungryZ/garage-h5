@@ -2,17 +2,22 @@
 	"pages": [{
 		"path": "pages/index/index",
 		"style": {
-			"navigationBarTitleText": "uni-app"
+			"navigationBarTitleText": ""
 		}
 	}, {
 		"path": "pages/repair_bill/repair_bill",
 		"style": {
-			"navigationBarTitleText": "uni-app"
+			"navigationBarTitleText": ""
+		}
+	}, {
+		"path": "pages/repair_item/repair_item",
+		"style": {
+			"navigationBarTitleText": ""
 		}
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"app-plus": {
