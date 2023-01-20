@@ -19,6 +19,10 @@
 	align-items: center;
 }
 
+.gar-flex-wrap {
+	flex-wrap: wrap;
+}
+
 .gar-title {
 	margin: 0 20rpx;
 	font-size: 36rpx;

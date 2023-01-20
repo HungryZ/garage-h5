@@ -4,7 +4,7 @@
 		<view>
 			<form @submit="formSubmit" @reset="formReset">
 				<div class="hint">基础信息</div>
-				<view class="basic-item gar-flex" v-for="item in items">
+				<view class="basic-item gar-flex bottom-border" v-for="item in items">
 					<view class="gar-title">{{item.title}}</view>
 					<input class="uni-input" :name="item.name" placeholder="placeholder" />
 				</view>
@@ -12,13 +12,16 @@
 					<div class="hint">项目</div>
 					<div class="add-button" @click="addRepairItemClicked()">添加></div>
 				</div>
-				<view class="repair-item gar-flex" v-for="repairItem in repairItems">
-					<view class="gar-title">{{repairItem.title}}</view>
-					<view class="title">¥{{repairItem.price}}</view>
+				<view class="repair-item gar-flex bottom-border" v-for="repairItem in repairItems">
+					<div>
+						<view class="gar-title">{{repairItem.name}}</view>
+						<view class="repair-item-count">x{{repairItem.count}}</view>
+					</div>
+					<view class="title">¥{{repairItem.price * repairItem.count}}</view>
 				</view>
-				<view class="repair-item gar-flex">
+				<view class="repair-item gar-flex" v-if="repairItems">
 					<view class="gar-title">合计</view>
-					<view class="title">¥10000</view>
+					<view class="title">¥{{totalAmount}}</view>
 				</view>
 				<view class="uni-btn-v">
 					<button form-type="submit">Submit</button>
@@ -41,6 +44,10 @@
 					name: 'carModel',
 					check: null,
 				}, {
+					title: 'mileage',
+					name: 'mileage',
+					check: null,
+				}, {
 					title: 'owner',
 					name: 'owner',
 					check: null,
@@ -48,12 +55,13 @@
 					title: 'phone',
 					name: 'phone',
 					check: null,
-				}, {
-					title: 'mileage',
-					name: 'mileage',
-					check: null,
 				}],
-				repairItem: null,
+				repairItems: [{
+					name: '11111111111',
+					count: 1,
+					price: 100,
+				}],
+				totalAmount: 0,
 			}
 		},
 		methods: {
@@ -61,32 +69,24 @@
 				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
 				//定义表单规则
 				var rule = [{
-						name: "nickname",
-						checkType: "string",
-						checkRule: "1,3",
-						errorMsg: "姓名应为1-3个字符"
-					},
-					{
-						name: "gender",
-						checkType: "in",
-						checkRule: "男,女",
-						errorMsg: "请选择性别"
-					},
-					{
-						name: "loves",
+						name: "plateNumber",
 						checkType: "notnull",
 						checkRule: "",
-						errorMsg: "请选择爱好"
+						errorMsg: "车牌号必填"
+					},
+					{
+						name: "repairItems",
+						checkType: "notnull",
+						checkRule: "",
+						errorMsg: "维修项目必填"
 					}
 				];
 				//进行表单检查
-				var formData = e.detail.value;
-				var checkRes = graceChecker.check(formData, rule);
+				var formData = e.detail.value
+				formData.repairItems = this.repairItems
+				var checkRes = graceChecker.check(formData, rule)
 				if (checkRes) {
-					uni.showToast({
-						title: "验证通过!",
-						icon: "none"
-					});
+					// request
 				} else {
 					uni.showToast({
 						title: graceChecker.error,
@@ -100,19 +100,32 @@
 					url: '../repair_item/repair_item',
 					events: {
 						// 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
-						selectRepairItem: function(data) {
-							that.repairItem = data
-							console.log(that.repairItem)
-							that.$forceUpdate()
+						selectRepairItem: function({
+							data // 解构
+						}) {
+							console.log(data)
+							that.repairItems = data
+							that.updateTotalAmount()
 						},
 					},
 				});
+			},
+			updateTotalAmount() {
+				var sum = 0
+				this.repairItems.forEach((repairItem) => {
+					sum += repairItem.price * repairItem.count
+				})
+				this.totalAmount = sum
 			},
 		}
 	}
 </script>
 
 <style>
+	.bottom-border {
+		border-bottom: 1rpx solid lightgray;
+	}
+
 	.hint {
 		font-size: 18rpx;
 		padding-left: 10rpx;
@@ -120,7 +133,6 @@
 	}
 
 	.basic-item {
-		border-bottom: 1rpx solid lightgray;
 		padding: 8rpx 25rpx;
 	}
 
@@ -130,14 +142,21 @@
 	}
 
 	.add-button {
+		font-size: 18rpx;
 		color: royalblue;
-		border-bottom: 1rpx solid royalblue;
 		margin-right: 10rpx;
+		border-bottom: 1rpx solid royalblue;
 	}
 
 	.repair-item {
 		padding: 8rpx 25rpx;
 		flex-wrap: nowrap;
+	}
+
+	.repair-item-count {
+		padding: 8rpx 25rpx;
+		color: darkgray;
+		font-size: 18rpx;
 	}
 
 	.uni-btn-v {
