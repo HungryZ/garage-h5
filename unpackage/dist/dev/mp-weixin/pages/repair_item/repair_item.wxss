@@ -1,0 +1,22 @@
+
+.bottom-border {
+		border-bottom: 1rpx solid lightgray;
+}
+.hint {
+		font-size: 24rpx;
+		padding-left: 10rpx;
+		color: gray;
+}
+.basic-item {
+		padding: 8rpx 25rpx;
+}
+.uni-input {
+		font-size: 36rpx;
+		text-align: right;
+}
+.uni-btn-v {
+		margin: 50rpx;
+}
+.button-delete {
+		color: red;
+}

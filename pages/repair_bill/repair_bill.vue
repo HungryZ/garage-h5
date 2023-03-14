@@ -5,22 +5,22 @@
 			<form @submit="formSubmit" @reset="formReset">
 				<div class="hint">基础信息</div>
 				<view class="basic-item gar-flex bottom-border" v-for="item in items">
-					<view class="gar-title">{{item.title}}</view>
+					<view class="gar-content">{{item.title}}</view>
 					<input class="uni-input" :name="item.name" placeholder="placeholder" />
 				</view>
 				<div class="gar-flex" style="padding-top: 30rpx;">
 					<div class="hint">项目</div>
-					<div class="add-button" @click="addRepairItemClicked()">添加></div>
+					<div class="add-button" @click="addRepairItemClicked()">添加 ></div>
 				</div>
 				<view class="repair-item gar-flex bottom-border" v-for="repairItem in repairItems">
 					<div>
-						<view class="gar-title">{{repairItem.name}}</view>
+						<view class="gar-content">{{repairItem.name}}</view>
 						<view class="repair-item-count">x{{repairItem.count}}</view>
 					</div>
 					<view class="title">¥{{repairItem.price * repairItem.count}}</view>
 				</view>
 				<view class="repair-item gar-flex" v-if="repairItems">
-					<view class="gar-title">合计</view>
+					<view class="gar-content">合计</view>
 					<view class="title">¥{{totalAmount}}</view>
 				</view>
 				<view class="uni-btn-v">
@@ -56,11 +56,7 @@
 					name: 'phone',
 					check: null,
 				}],
-				repairItems: [{
-					name: '11111111111',
-					count: 1,
-					price: 100,
-				}],
+				repairItems: [],
 				totalAmount: 0,
 			}
 		},
@@ -97,14 +93,15 @@
 			addRepairItemClicked() {
 				let that = this
 				uni.navigateTo({
-					url: '../repair_item/repair_item',
+					url: '../repair_item/repair_item_list?type=1',
 					events: {
 						// 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
 						selectRepairItem: function({
 							data // 解构
 						}) {
 							console.log(data)
-							that.repairItems = data
+							data.count = 1
+							that.repairItems.push(data)
 							that.updateTotalAmount()
 						},
 					},
@@ -127,7 +124,7 @@
 	}
 
 	.hint {
-		font-size: 18rpx;
+		font-size: 24rpx;
 		padding-left: 10rpx;
 		color: gray;
 	}
@@ -139,10 +136,11 @@
 	.uni-input {
 		font-size: 36rpx;
 		text-align: right;
+		height: 48rpx;
 	}
 
 	.add-button {
-		font-size: 18rpx;
+		font-size: 24rpx;
 		color: royalblue;
 		margin-right: 10rpx;
 		border-bottom: 1rpx solid royalblue;
@@ -156,7 +154,7 @@
 	.repair-item-count {
 		padding: 8rpx 25rpx;
 		color: darkgray;
-		font-size: 18rpx;
+		font-size: 24rpx;
 	}
 
 	.uni-btn-v {

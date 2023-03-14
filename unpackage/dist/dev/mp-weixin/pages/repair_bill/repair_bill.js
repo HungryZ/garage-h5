@@ -13,6 +13,10 @@ const _sfc_main = {
         name: "carModel",
         check: null
       }, {
+        title: "mileage",
+        name: "mileage",
+        check: null
+      }, {
         title: "owner",
         name: "owner",
         check: null
@@ -20,52 +24,64 @@ const _sfc_main = {
         title: "phone",
         name: "phone",
         check: null
-      }, {
-        title: "mileage",
-        name: "mileage",
-        check: null
-      }]
+      }],
+      repairItems: [],
+      totalAmount: 0
     };
   },
   methods: {
     formSubmit: function(e) {
-      console.log("form\u53D1\u751F\u4E86submit\u4E8B\u4EF6\uFF0C\u643A\u5E26\u6570\u636E\u4E3A\uFF1A" + JSON.stringify(e.detail.value));
+      console.log("form发生了submit事件，携带数据为：" + JSON.stringify(e.detail.value));
       var rule = [
         {
-          name: "nickname",
-          checkType: "string",
-          checkRule: "1,3",
-          errorMsg: "\u59D3\u540D\u5E94\u4E3A1-3\u4E2A\u5B57\u7B26"
-        },
-        {
-          name: "gender",
-          checkType: "in",
-          checkRule: "\u7537,\u5973",
-          errorMsg: "\u8BF7\u9009\u62E9\u6027\u522B"
-        },
-        {
-          name: "loves",
+          name: "plateNumber",
           checkType: "notnull",
           checkRule: "",
-          errorMsg: "\u8BF7\u9009\u62E9\u7231\u597D"
+          errorMsg: "车牌号必填"
+        },
+        {
+          name: "repairItems",
+          checkType: "notnull",
+          checkRule: "",
+          errorMsg: "维修项目必填"
         }
       ];
       var formData = e.detail.value;
+      formData.repairItems = this.repairItems;
       var checkRes = common_graceChecker.graceChecker.check(formData, rule);
-      if (checkRes) {
-        common_vendor.index.showToast({
-          title: "\u9A8C\u8BC1\u901A\u8FC7!",
-          icon: "none"
-        });
-      } else {
+      if (checkRes)
+        ;
+      else {
         common_vendor.index.showToast({
           title: common_graceChecker.graceChecker.error,
           icon: "none"
         });
       }
     },
-    formReset: function(e) {
-      console.log("\u6E05\u7A7A\u6570\u636E");
+    addRepairItemClicked() {
+      let that = this;
+      common_vendor.index.navigateTo({
+        url: "../repair_item/repair_item_list?type=1",
+        events: {
+          // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+          selectRepairItem: function({
+            data
+            // 解构
+          }) {
+            console.log(data);
+            data.count = 1;
+            that.repairItems.push(data);
+            that.updateTotalAmount();
+          }
+        }
+      });
+    },
+    updateTotalAmount() {
+      var sum = 0;
+      this.repairItems.forEach((repairItem) => {
+        sum += repairItem.price * repairItem.count;
+      });
+      this.totalAmount = sum;
     }
   }
 };
@@ -74,7 +90,7 @@ if (!Array) {
   _component_page_head();
 }
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-  return {
+  return common_vendor.e({
     a: common_vendor.p({
       title: "form"
     }),
@@ -84,9 +100,21 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
         b: item.name
       };
     }),
-    c: common_vendor.o((...args) => $options.formSubmit && $options.formSubmit(...args)),
-    d: common_vendor.o((...args) => $options.formReset && $options.formReset(...args))
-  };
+    c: common_vendor.o(($event) => $options.addRepairItemClicked()),
+    d: common_vendor.f($data.repairItems, (repairItem, k0, i0) => {
+      return {
+        a: common_vendor.t(repairItem.name),
+        b: common_vendor.t(repairItem.count),
+        c: common_vendor.t(repairItem.price * repairItem.count)
+      };
+    }),
+    e: $data.repairItems
+  }, $data.repairItems ? {
+    f: common_vendor.t($data.totalAmount)
+  } : {}, {
+    g: common_vendor.o((...args) => $options.formSubmit && $options.formSubmit(...args)),
+    h: common_vendor.o((...args) => _ctx.formReset && _ctx.formReset(...args))
+  });
 }
-const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "/Users/cmb/Documents/HBuilderProjects/garage/pages/repair_bill/repair_bill.vue"]]);
+const MiniProgramPage = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "/Users/cmb/Documents/HBuilderProjects/garage-h5/pages/repair_bill/repair_bill.vue"]]);
 wx.createPage(MiniProgramPage);

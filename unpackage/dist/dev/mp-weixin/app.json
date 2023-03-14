@@ -1,11 +1,14 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/repair_bill/repair_bill"
+    "pages/repair_bill/repair_bill",
+    "pages/repair_bill/repair_bill_list",
+    "pages/repair_item/repair_item",
+    "pages/repair_item/repair_item_list"
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
+    "navigationBarTitleText": "标题标题标题",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
   },

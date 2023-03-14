@@ -1,0 +1,5 @@
+
+.item-row {
+		height: 40rpx;
+		padding: 20rpx;
+}

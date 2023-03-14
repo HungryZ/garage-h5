@@ -1,0 +1,1 @@
+<view vfor><block wx:for="{{a}}" wx:for-item="item" wx:key="d"><view class="gar-flex item-row" bindtap="{{item.c}}" style="background-color:{{index % 2 ? '#f5f5f5' : 'white'}}"><view>{{item.a}}</view><view>{{item.b}}</view></view></block></view>

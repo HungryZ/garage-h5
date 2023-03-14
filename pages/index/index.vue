@@ -25,11 +25,6 @@
 						},
 						{
 							icon: '../../images/BusinessIcons_DollarCoin.png',
-							text: '查询',
-							url: 'bill/search/search?itemType=0'
-						},
-						{
-							icon: '../../images/BusinessIcons_DollarCoin.png',
 							text: '列表',
 							url: '../repair_bill/repair_bill_list'
 						},
@@ -45,11 +40,6 @@
 							icon: '../../static/logo.png',
 							text: '新建',
 							url: '../repair_item/repair_item'
-						},
-						{
-							icon: '../../images/BusinessIcons_DollarCoin.png',
-							text: '查询',
-							url: 'bill/search/search?itemType=0'
 						},
 						{
 							icon: '../../images/BusinessIcons_DollarCoin.png',
@@ -105,7 +95,7 @@
 	}
 
 	.category-title {
-		font-size: 42rpx;
+		font-size: 36rpx;
 		padding: 10rpx 10rpx 40rpx 0rpx;
 	}
 
