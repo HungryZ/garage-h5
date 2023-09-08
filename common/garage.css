@@ -1,3 +1,6 @@
+
+/* ********************** flex ************************* */
+
 .gar-flex {
 	display: flex;
 	flex-wrap: wrap;
@@ -17,4 +20,45 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+
+.gar-flex-wrap {
+	flex-wrap: wrap;
+}
+
+/* ********************** 主题 ************************* */
+
+.gar-title {
+	margin: 0 20rpx;
+	font-size: 36rpx;
+}
+
+.gar-content {
+	margin: 0 20rpx;
+	font-size: 32rpx;
+	color: #222;
+}
+
+/* ********************** 布局 ************************* */
+
+.gar-padding-top-10 {
+	padding-top: 10rpx;
+}
+
+.gar-padding-top-20 {
+	padding-top: 20rpx;
+}
+
+.gar-padding-h-20 {
+	padding-left: 20rpx;
+	padding-right: 20rpx;
+}
+
+.gar-padding-h-25 {
+	padding-left: 25rpx;
+	padding-right: 25rpx;
+}
+
+.gar-margin-top-20 {
+	margin-top: 20rpx;
 }
