@@ -79,6 +79,28 @@
 			}
 		},
 		onLoad(e) {
+			wx.cloud.callFunction({
+				name: 'period-amount',
+				data: {
+					collectionName: 'repair-bill',
+					year: 2023,
+					month: 8,
+				},
+				success: res => {
+					wx.hideLoading()
+					console.log('[云函数] [period-amount] 调用成功：', res.result)
+					this.setData({
+						statisticList: res.result
+					})
+				},
+				fail: err => {
+					console.error('[云函数] [period-amount] 调用失败', err)
+					wx.showToast({
+						icon: 'none',
+						title: '请求失败'
+					})
+				}
+			})
 			if (e.id) {
 				this.canEdit = false
 				this.orderID = e.id
