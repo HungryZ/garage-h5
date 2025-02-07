@@ -33,7 +33,10 @@
 				<view class="uni-btn-v">
 					<div v-if="canEdit">
 						<button form-type="submit">Submit</button>
-						<button class="button-delete" @click="deleteButtonClicked()" v-if="orderID">Delete</button>
+						<div v-if="canEdit && type == 1">
+							<button class="button-delete" @click="deleteButtonClicked()">Delete</button>
+							<button class="button-cancel" @click="cancelButtonClicked()">Cancel</button>
+						</div>
 					</div>
 					<button @click="editButtonClicked()" v-else>Edit</button>
 				</view>
@@ -46,8 +49,9 @@
 	export default {
 		data() {
 			return {
-				orderID: null,
+				type: 0, // 0 add, 1 update
 				canEdit: true,
+				bill: {},
 				propertys: [{
 					title: 'plateNum',
 					name: 'plateNumber',
@@ -73,52 +77,24 @@
 					name: 'phone',
 					value: null,
 					check: null,
+				}, {
+					title: 'operator',
+					name: 'operator',
+					value: null,
+					check: null,
 				}],
 				repairItems: [],
 				totalAmount: 0,
 			}
 		},
 		onLoad(e) {
-			wx.cloud.callFunction({
-				name: 'period-amount',
-				data: {
-					collectionName: 'repair-bill',
-					year: 2023,
-					month: 8,
-				},
-				success: res => {
-					wx.hideLoading()
-					console.log('[云函数] [period-amount] 调用成功：', res.result)
-					this.setData({
-						statisticList: res.result
-					})
-				},
-				fail: err => {
-					console.error('[云函数] [period-amount] 调用失败', err)
-					wx.showToast({
-						icon: 'none',
-						title: '请求失败'
-					})
-				}
-			})
-			if (e.id) {
+			if (e.item) {
+				this.bill = JSON.parse(e.item)
+				console.log('onLoad')
+				console.log(this.bill)
 				this.canEdit = false
-				this.orderID = e.id
-				this.$req.request({
-					path: 'order/detail',
-					method: 'GET',
-					data: {
-						"id": e.id
-					},
-				}).then((res) => {
-					this.propertys[0].value = res.plateNumber
-					this.propertys[1].value = res.carModel
-					this.propertys[2].value = res.mileage
-					this.propertys[3].value = res.vehicleOwner
-					this.propertys[4].value = res.phone
-					this.repairItems = res.items
-					this.updateTotalAmount()
-				})
+				this.type = 1
+				this.refreshShowingData()
 			}
 		},
 		methods: {
@@ -136,41 +112,89 @@
 						checkType: "notnull",
 						checkRule: "",
 						errorMsg: "维修项目必填"
-					}
+					},
+					{
+						name: "operator",
+						checkType: "notnull",
+						checkRule: "",
+						errorMsg: "施工人必填"
+					},
 				];
 				//进行表单检查
 				var formData = e.detail.value
 				formData.repairItems = this.repairItems
-				var checkRes = graceChecker.check(formData, rule)
-				if (checkRes) {
-					var data = {
-						"plateNumber": formData.plateNumber,
-						"plateColor": 0, // 车牌颜色 0蓝 1黄 2黑 3白 4渐变绿 5黄绿双拼 6蓝白渐变，目前全传0
-						"carModel": formData.carModel,
-						"mileage": formData.mileage,
-						"vehicleOwner": formData.owner,
-						"phone": formData.phone,
-						"items": this.repairItems,
-					}
-					var url
-					if (!this.orderID) { // 新建
-						url = 'order/create'
-					} else { // 编辑
-						url = 'order/update'
-						data.id = this.orderID
-					}
-					this.$req.request({
-						path: url,
-						data: data,
-					}).then((res) => {
-						this.canEdit = false
-						this.orderID = res
-					})
-				} else {
+				if (!graceChecker.check(formData, rule)) {
 					uni.showToast({
 						title: graceChecker.error,
 						icon: "none"
 					});
+					return
+				}
+
+				this.bill.plateNumber = formData.plateNumber
+				this.bill.carModel = formData.carModel
+				this.bill.mileage = formData.mileage
+				this.bill.owner = formData.owner
+				this.bill.phone = formData.phone
+				this.bill.operator = formData.operator
+				this.bill.items = JSON.parse(JSON.stringify(this.repairItems))
+				this.bill.amount = this.totalAmount
+
+				if (this.type == 0) {
+					this.bill.date = new Date()
+					uni.showLoading({
+						mask: true
+					})
+					wx.cloud.callFunction({
+						name: 'add',
+						data: {
+							collectionName: 'repair-bill',
+							data: this.bill
+						},
+						success: res => {
+							console.log('[云函数] [add] 调用成功：', res.result)
+							this.canEdit = false
+							this.type = 1
+							uni.showToast({
+								title: '创建成功',
+								icon: 'success'
+							});
+						},
+						fail: err => {
+							console.error('[云函数] [add] 调用失败', err)
+							uni.showToast({
+								title: '请求失败',
+								icon: 'none'
+							});
+						}
+					})
+				} else {
+					uni.showLoading({
+						mask: true
+					})
+					wx.cloud.callFunction({
+						name: 'update',
+						data: {
+							collectionName: 'repair-bill',
+							_id: this.bill._id,
+							data: this.bill
+						},
+						success: res => {
+							console.log('[云函数] [update] 调用成功：', res.result)
+							this.canEdit = false
+							uni.showToast({
+								icon: 'success',
+								title: '更新成功'
+							})
+						},
+						fail: err => {
+							console.error('[云函数] [update] 调用失败', err)
+							uni.showToast({
+								icon: 'none',
+								title: '请求失败'
+							})
+						}
+					})
 				}
 			},
 			addRepairItemClicked() {
@@ -182,14 +206,12 @@
 						selectRepairItem: function({
 							data // 解构
 						}) {
-							// 订单里的维修项ID叫itemId，这里统一用itemId
-							data.itemId = data.id
 							console.log(data)
 							var isNewItem = true
 							for (let item of that.repairItems) {
 								console.log('for')
 								console.log(item)
-								if (item.itemId == data.itemId) {
+								if (item._id == data._id) {
 									item.count += 1
 									isNewItem = false
 									break
@@ -226,19 +248,53 @@
 			editButtonClicked() {
 				this.canEdit = true
 			},
+			cancelButtonClicked() {
+				this.canEdit = false
+				this.refreshShowingData()
+			},
 			deleteButtonClicked() {
-				this.$req.request({
-					path: 'order/delete',
+				uni.showLoading({
+					mask: true
+				})
+				wx.cloud.callFunction({
+					name: 'remove',
 					data: {
-						id: this.orderID
+						collectionName: 'repair-bill',
+						_id: this.bill._id
 					},
-				}).then((res) => {
-					uni.navigateBack()
-					uni.showToast({
-						title: '删除成功'
-					})
+					success: res => {
+						wx.hideLoading()
+						console.log('[云函数] [remove] 调用成功：', res.result)
+						if (res.result.succeed) {
+							uni.navigateBack()
+							uni.showToast({
+								title: '删除成功'
+							})
+						} else {
+							this.setData({
+								error: '删除失败'
+							})
+						}
+					},
+					fail: err => {
+						console.error('[云函数] [remove] 调用失败', err)
+						uni.showToast({
+							icon: 'none',
+							title: '请求失败'
+						})
+					}
 				})
 			},
+			refreshShowingData() {
+				this.propertys[0].value = this.bill.plateNumber
+				this.propertys[1].value = this.bill.carModel
+				this.propertys[2].value = this.bill.mileage
+				this.propertys[3].value = this.bill.owner
+				this.propertys[4].value = this.bill.phone
+				this.propertys[5].value = this.bill.operator
+				this.repairItems = JSON.parse(JSON.stringify(this.bill.items)) // 重新生成对象，否则会被同步修改
+				this.updateTotalAmount()
+			}
 		}
 	}
 </script>

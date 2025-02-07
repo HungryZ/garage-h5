@@ -19,24 +19,30 @@
 		data() {
 			return {
 				categorys: [{
-					categoryName: "维修记录",
+					categoryName: "Record",
 					items: [{
 							icon: '../../static/c1.png',
-							text: '新建',
+							text: 'new',
 							url: '../repair_bill/repair_bill'
 						},
 						{
 							icon: '../../static/c2.png',
-							text: '车牌查询',
+							text: 'search',
 							action: () => {
-								console.log('车牌查询')
+								uni.navigateTo({
+									url: '../repair_bill/repair_bill_list?plateNumber=888'
+								})
+								return
 							}
 						},
 						{
 							icon: '../../static/c3.png',
-							text: '扫一扫',
+							text: 'scan',
 							action: () => {
-								console.log('扫一扫')
+								uni.navigateTo({
+									url: '../repair_bill/repair_bill_list?plateNumber=浙AK162Y'
+								})
+								return
 								// 选择图片
 								wx.chooseMedia({
 									count: 1,
@@ -45,7 +51,9 @@
 									sizeType: ['compressed'],
 									camera: 'back',
 									success: async function(res) {
-										console.log(res.tempFiles[0])
+										uni.showLoading({
+											title: '识别中···'
+										})
 										try {
 											const invokeRes = await wx.serviceMarket
 												.invokeService({
@@ -63,25 +71,33 @@
 														ocr_type: 10
 													},
 												})
-
 											console.log('invokeService success', invokeRes)
+											uni.hideLoading()
 											if (invokeRes.errMsg == 'invokeService:ok') {
-												uni.showModal({
-													title: invokeRes.data.plate_num_res
-														.number.text
-												})
+												let plateNum = invokeRes.data.plate_num_res
+													.number.text
+												uni.navigateTo({
+													url: '../repair_bill/repair_bill_list?plateNumber=' +
+														plateNum,
+												});
+											} else {
+												uni.showToast({
+													title: '识别失败',
+													icon: 'error'
+												});
 											}
 										} catch (err) {
 											console.error('invokeService fail', err)
 											uni.showToast({
-												title: '识别失败'
+												title: '识别失败',
+												icon: 'error'
 											});
 										}
 									},
 									fail(err) {
 										uni.showToast({
 											title: '拍照失败',
-											icon: "none"
+											icon: 'error'
 										});
 									},
 								})
@@ -92,28 +108,28 @@
 						},
 					]
 				}, {
-					categoryName: "维修项目",
+					categoryName: "Item",
 					items: [{
 							icon: '../../static/c1.png',
-							text: '新建',
+							text: 'new',
 							url: '../repair_item/repair_item'
 						},
 						{
 							icon: '../../static/c2.png',
-							text: '列表',
+							text: 'list',
 							url: '../repair_item/repair_item_list'
 						},
 					]
 				}, {
-					categoryName: "其他",
+					categoryName: "Other",
 					items: [{
 							icon: '../../static/c1.png',
-							text: '统计',
+							text: 'statistics',
 							url: 'statistics/statistics'
 						},
 						{
 							icon: '../../static/c2.png',
-							text: '账号管理'
+							text: 'manage'
 						},
 					]
 				}]

@@ -11,13 +11,11 @@
 </template>
 
 <script>
-	const PAGE_SIZE = 100
 	export default {
 		data() {
 			return {
 				// 0:展示列表, 1:选择项目
 				type: 0,
-				page: 0,
 				hasMoreData: true,
 				items: [],
 			}
@@ -28,31 +26,37 @@
 			}
 		},
 		onShow() {
-			this.requestDataOfPage(1)
+			this.selectItemsByName('111')
 		},
 		onPullDownRefresh() {
-			this.requestDataOfPage(1)
+			
 		},
 		onReachBottom() {
-			this.requestDataOfPage(this.page + 1)
+
 		},
 		methods: {
-			requestDataOfPage(page) {
-				if (!this.hasMoreData && page != 1) return
-				this.$req.request({
-					path: 'item/listAll',
+			selectItemsByName(name) {
+				wx.showLoading({
+					mask: true
+				})
+				wx.cloud.callFunction({
+					name: 'regexp-search',
 					data: {
-						"page": page,
-						"size": PAGE_SIZE,
-						"condition": {},
+						collectionName: 'repair-item',
+						field: 'name',
+						value: name,
 					},
-				}).then((res) => {
-					this.page = page
-					this.hasMoreData = res.list.length >= PAGE_SIZE
-					if (this.page == 1) {
-						this.items = res.list
-					} else {
-						this.items = [...this.items, ...res.list]
+					success: res => {
+						wx.hideLoading()
+						console.log('[云函数] [regexp-search] 调用成功：', res.result)
+						this.items = res.result.data
+					},
+					fail: err => {
+						console.error('[云函数] [regexp-search] 调用失败', err)
+						wx.showToast({
+							icon: 'none',
+							title: '请求失败'
+						})
 					}
 				})
 			},

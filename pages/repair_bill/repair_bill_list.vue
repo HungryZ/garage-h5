@@ -11,50 +11,54 @@
 </template>
 
 <script>
-	const PAGE_SIZE = 100
 	export default {
 		data() {
 			return {
-				page: 0,
-				hasMoreData: true,
+				plateNumber: '',
 				items: [],
 			}
 		},
 		onLoad(e) {
-
+			this.plateNumber = e.plateNumber
+			this.requestItemList()
 		},
 		onShow() {
-			this.requestDataOfPage(1)
+			
 		},
 		onPullDownRefresh() {
-			this.requestDataOfPage(1)
+			this.requestItemList()
 		},
 		onReachBottom() {
-			this.requestDataOfPage(this.page + 1)
+
 		},
 		methods: {
-			requestDataOfPage(page) {
-				if (!this.hasMoreData && page != 1) return
-				this.$req.request({
-					path: 'order/listAll',
+			requestItemList() {
+				uni.showLoading()
+				wx.cloud.callFunction({
+					name: 'regexp-search',
 					data: {
-						"page": page,
-						"size": PAGE_SIZE,
-						"condition": {},
+						collectionName: 'repair-bill',
+						field: 'plateNumber',
+						value: this.plateNumber,
 					},
-				}).then((res) => {
-					this.page = page
-					this.hasMoreData = res.list.length >= PAGE_SIZE
-					if (this.page == 1) {
-						this.items = res.list
-					} else {
-						this.items = [...this.items, ...res.list]
+					success: res => {
+						uni.hideLoading()
+						console.log('[云函数] [regexp-search] 调用成功：', res.result)
+						this.items = res.result.data.reverse()
+						console.log(this.items)
+					},
+					fail: err => {
+						console.error('[云函数] [regexp-search] 调用失败', err)
+						wx.showToast({
+							icon: 'none',
+							title: '请求失败'
+						})
 					}
 				})
 			},
 			rowClicked(item) {
 				uni.navigateTo({
-					url: 'repair_bill?id=' + item.id,
+					url: 'repair_bill?item=' + JSON.stringify(item),
 				});
 			},
 		},

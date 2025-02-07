@@ -12,7 +12,7 @@
 				<view class="uni-btn-v">
 					<div v-if="canEdit">
 						<button form-type="submit">Submit</button>
-						<button class="button-delete" @click="deleteButtonClicked()" v-if="itemID">Delete</button>
+						<button class="button-delete" @click="deleteButtonClicked()" v-if="type == 1 && canEdit">Delete</button>
 					</div>
 					<button @click="editButtonClicked()" v-else>Edit</button>
 				</view>
@@ -25,8 +25,9 @@
 	export default {
 		data() {
 			return {
-				itemID: false,
+				type: 0, // 0 add, 1 update
 				canEdit: true,
+				item: {},
 				properties: [{
 					title: 'name',
 					name: 'name',
@@ -43,17 +44,17 @@
 		onLoad(e) {
 			if (e.item) {
 				this.canEdit = false
-				let item = JSON.parse(e.item)
-				this.itemID = item.id
-				this.properties[0].value = item.name
-				this.properties[1].value = item.price
+				this.type = 1
+				this.item = JSON.parse(e.item)
+				this.properties[0].value = this.item.name
+				this.properties[1].value = this.item.price
 			}
 		},
 		methods: {
 			formSubmit: function(e) {
 				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
 				console.log(this.properties)
-				//定义表单规则
+				// 定义表单规则
 				var rule = [
 					// {
 					// 	name: "nickname",
@@ -74,8 +75,9 @@
 					// 	errorMsg: "请选择爱好"
 					// }
 				];
-				//进行表单检查
+				// 进行表单检查
 				var formData = e.detail.value;
+				formData.price = Number(formData.price)
 				var checkRes = graceChecker.check(formData, rule);
 				if (!checkRes) {
 					uni.showToast({
@@ -84,10 +86,10 @@
 					});
 					return
 				}
-				if (this.itemID) {
-					this.updateItem(formData)
-				} else {
+				if (this.type == 0) {
 					this.createItem(formData)
+				} else {
+					this.updateItem(formData)
 				}
 			},
 			resetItemsValue: function(e) {
@@ -99,37 +101,80 @@
 				this.canEdit = true
 			},
 			deleteButtonClicked() {
-				this.$req.request({
-					path: 'item/delete',
+				uni.showLoading({
+					mask: true
+				})
+				wx.cloud.callFunction({
+					name: 'remove',
 					data: {
-						id: this.itemID
+						collectionName: 'repair-item',
+						_id: this.item._id
 					},
-				}).then((res) => {
-					uni.navigateBack()
-					uni.showToast({
-						title: '删除成功'
-					})
+					success: res => {
+						console.log('[云函数] [remove] 调用成功：', res.result)
+						if (res.result.succeed) {
+							uni.showToast({
+								icon: 'success',
+								title: '删除成功',
+							})
+							setTimeout(() => {
+								uni.navigateBack()
+							}, 500);
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: '请求失败'
+							})
+						}
+					},
+					fail: err => {
+						console.error('[云函数] [remove] 调用失败', err)
+						uni.showToast({
+							icon: 'none',
+							title: '请求失败'
+						})
+					}
 				})
 			},
 			createItem(item) {
-				this.$req.request({
-					path: 'item/create',
-					data: item,
-				}).then((res) => {
-					this.canEdit = false
-					this.itemID = res
+				wx.cloud.callFunction({
+					name: 'add',
+					data: {
+						collectionName: 'repair-item',
+						data: item
+					},
+					success: res => {
+						console.log('[云函数] [add] 调用成功：', res.result)
+						this.canEdit = false
+					},
+					fail: err => {
+						console.error('[云函数] [add] 调用失败', err)
+						wx.showToast({
+							icon: 'none',
+							title: '请求失败'
+						})
+					}
 				})
 			},
 			updateItem(item) {
-				item.id = this.itemID + ''
-				this.$req.request({
-					path: 'item/update',
-					data: item,
-				}).then((res) => {
-					uni.showToast({
-						title: '成功'
-					})
-					this.canEdit = false
+				wx.cloud.callFunction({
+					name: 'update',
+					data: {
+						collectionName: 'repair-item',
+						_id: this.item._id,
+						data: item
+					},
+					success: res => {
+						console.log('[云函数] [update] 调用成功：', res.result)
+						this.canEdit = false
+					},
+					fail: err => {
+						console.error('[云函数] [update] 调用失败', err)
+						wx.showToast({
+							icon: 'none',
+							title: '请求失败'
+						})
+					}
 				})
 			},
 		}
