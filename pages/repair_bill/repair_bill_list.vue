@@ -33,7 +33,9 @@
 		},
 		methods: {
 			requestItemList() {
-				uni.showLoading()
+				uni.showLoading({
+					title: this.plateNumber,
+				})
 				wx.cloud.callFunction({
 					name: 'regexp-search',
 					data: {

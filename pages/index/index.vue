@@ -121,11 +121,11 @@
 						},
 					]
 				}, {
-					categoryName: "Other",
+					categoryName: "Wash",
 					items: [{
 							icon: '../../static/c1.png',
-							text: 'statistics',
-							url: 'statistics/statistics'
+							text: 'newWashVip',
+							url: '../wash/wash_edit'
 						},
 						{
 							icon: '../../static/c2.png',

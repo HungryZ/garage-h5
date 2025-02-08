@@ -25,6 +25,11 @@
 			"navigationBarTitleText": "标题标题标题",
 			"enablePullDownRefresh": true
 		}
+	}, {
+		"path": "pages/wash/wash_edit",
+		"style": {
+			"navigationBarTitleText": "新增洗车会员"
+		}
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

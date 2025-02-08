@@ -53,7 +53,7 @@
 				canEdit: true,
 				bill: {},
 				propertys: [{
-					title: 'plateNum',
+					title: 'plateNumber',
 					name: 'plateNumber',
 					value: null,
 					check: null,
@@ -253,37 +253,47 @@
 				this.refreshShowingData()
 			},
 			deleteButtonClicked() {
-				uni.showLoading({
-					mask: true
-				})
-				wx.cloud.callFunction({
-					name: 'remove',
-					data: {
-						collectionName: 'repair-bill',
-						_id: this.bill._id
-					},
-					success: res => {
-						wx.hideLoading()
-						console.log('[云函数] [remove] 调用成功：', res.result)
-						if (res.result.succeed) {
-							uni.navigateBack()
-							uni.showToast({
-								title: '删除成功'
+				uni.showModal({
+					content: '确定删除吗',
+					confirmColor: '#f00',
+					success: function(res) {
+						if (res.confirm) {
+							uni.showLoading({
+								mask: true
 							})
-						} else {
-							this.setData({
-								error: '删除失败'
+							wx.cloud.callFunction({
+								name: 'remove',
+								data: {
+									collectionName: 'repair-bill',
+									_id: this.bill._id
+								},
+								success: res => {
+									wx.hideLoading()
+									console.log('[云函数] [remove] 调用成功：', res.result)
+									if (res.result.succeed) {
+										uni.navigateBack()
+										uni.showToast({
+											title: '删除成功'
+										})
+									} else {
+										this.setData({
+											error: '删除失败'
+										})
+									}
+								},
+								fail: err => {
+									console.error('[云函数] [remove] 调用失败', err)
+									uni.showToast({
+										icon: 'none',
+										title: '请求失败'
+									})
+								}
 							})
+						} else if (res.cancel) {
+							console.log('用户点击取消');
 						}
-					},
-					fail: err => {
-						console.error('[云函数] [remove] 调用失败', err)
-						uni.showToast({
-							icon: 'none',
-							title: '请求失败'
-						})
 					}
-				})
+				});
 			},
 			refreshShowingData() {
 				this.propertys[0].value = this.bill.plateNumber
