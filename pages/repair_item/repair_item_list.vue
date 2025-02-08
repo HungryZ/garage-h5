@@ -26,7 +26,7 @@
 			}
 		},
 		onShow() {
-			this.selectItemsByName('111')
+			this.selectItemsByName('')
 		},
 		onPullDownRefresh() {
 			

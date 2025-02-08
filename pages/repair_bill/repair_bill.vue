@@ -53,32 +53,32 @@
 				canEdit: true,
 				bill: {},
 				propertys: [{
-					title: 'plateNumber',
+					title: '车牌号',
 					name: 'plateNumber',
 					value: null,
 					check: null,
 				}, {
-					title: 'carModel',
+					title: '车型',
 					name: 'carModel',
 					value: null,
 					check: null,
 				}, {
-					title: 'mileage',
+					title: '公里数',
 					name: 'mileage',
 					value: null,
 					check: null,
 				}, {
-					title: 'owner',
+					title: '车主',
 					name: 'owner',
 					value: null,
 					check: null,
 				}, {
-					title: 'phone',
+					title: '车主号码',
 					name: 'phone',
 					value: null,
 					check: null,
 				}, {
-					title: 'operator',
+					title: '施工员',
 					name: 'operator',
 					value: null,
 					check: null,
@@ -103,21 +103,27 @@
 				//定义表单规则
 				var rule = [{
 						name: "plateNumber",
-						checkType: "notnull",
-						checkRule: "",
-						errorMsg: "车牌号必填"
+						checkType: "reg",
+						checkRule: "^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-HJ-NP-Z][A-HJ-NP-Z0-9]{4,5}[A-HJ-NP-Z0-9挂学警港澳使领]$",
+						errorMsg: "车牌号格式错误"
+					},
+					{
+						name: "mileage",
+						checkType: "int",
+						checkRule: "0,5",
+						errorMsg: "公里数错误"
 					},
 					{
 						name: "repairItems",
 						checkType: "notnull",
 						checkRule: "",
-						errorMsg: "维修项目必填"
+						errorMsg: "项目必填"
 					},
 					{
 						name: "operator",
 						checkType: "notnull",
 						checkRule: "",
-						errorMsg: "施工人必填"
+						errorMsg: "施工员必填"
 					},
 				];
 				//进行表单检查

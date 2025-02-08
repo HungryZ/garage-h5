@@ -32,12 +32,12 @@
 				canEdit: true,
 				car: {},
 				propertys: [{
-					title: 'plateNumber',
+					title: '车牌号',
 					name: 'plateNumber',
 					value: null,
 					check: null,
 				}, {
-					title: 'washTimesLeft',
+					title: '剩余洗车次数',
 					name: 'washTimesLeft',
 					value: null,
 					check: null,
@@ -53,16 +53,16 @@
 				//定义表单规则
 				var rule = [{
 						name: "plateNumber",
-						checkType: "notnull",
-						checkRule: "",
-						errorMsg: "车牌号必填"
+						checkType: "reg",
+						checkRule: "^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-HJ-NP-Z][A-HJ-NP-Z0-9]{4,5}[A-HJ-NP-Z0-9挂学警港澳使领]$",
+						errorMsg: "车牌号格式错误"
 					},
 					{
 						name: "washTimesLeft",
-						checkType: "notnull",
-						checkRule: "",
-						errorMsg: "次数必填"
-					},
+						checkType: "int",
+						checkRule: "0,5",
+						errorMsg: "剩余洗车次数错误"
+					}
 				];
 				//进行表单检查
 				var formData = e.detail.value

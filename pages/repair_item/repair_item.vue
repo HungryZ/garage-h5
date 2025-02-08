@@ -29,12 +29,12 @@
 				canEdit: true,
 				item: {},
 				properties: [{
-					title: 'name',
+					title: '名称',
 					name: 'name',
 					value: null,
 					check: null,
 				}, {
-					title: 'price',
+					title: '单价',
 					name: 'price',
 					value: null,
 					check: null,
@@ -56,24 +56,18 @@
 				console.log(this.properties)
 				// 定义表单规则
 				var rule = [
-					// {
-					// 	name: "nickname",
-					// 	checkType: "string",
-					// 	checkRule: "1,3",
-					// 	errorMsg: "姓名应为1-3个字符"
-					// },
-					// {
-					// 	name: "gender",
-					// 	checkType: "in",
-					// 	checkRule: "男,女",
-					// 	errorMsg: "请选择性别"
-					// },
-					// {
-					// 	name: "loves",
-					// 	checkType: "notnull",
-					// 	checkRule: "",
-					// 	errorMsg: "请选择爱好"
-					// }
+					{
+						name: "name",
+						checkType: "notnull",
+						checkRule: "",
+						errorMsg: "名称不能为空"
+					},
+					{
+						name: "price",
+						checkType: "int",
+						checkRule: "0,5",
+						errorMsg: "单价错误"
+					}
 				];
 				// 进行表单检查
 				var formData = e.detail.value;

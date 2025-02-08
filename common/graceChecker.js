@@ -35,7 +35,6 @@ export default {
 						return false;
 					}
 					break;
-					break;
 				case 'between':
 					if (!this.isNumber(data[rule[i].name])) {
 						this.error = rule[i].errorMsg;

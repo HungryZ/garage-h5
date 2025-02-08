@@ -19,15 +19,15 @@
 		data() {
 			return {
 				categorys: [{
-					categoryName: "Record",
+					categoryName: "维修记录",
 					items: [{
 							icon: '../../static/c1.png',
-							text: 'new',
+							text: '新建',
 							url: '../repair_bill/repair_bill'
 						},
 						{
 							icon: '../../static/c2.png',
-							text: 'search',
+							text: '输入车牌搜索',
 							action: () => {
 								uni.navigateTo({
 									url: '../repair_bill/repair_bill_list?plateNumber=888'
@@ -37,7 +37,7 @@
 						},
 						{
 							icon: '../../static/c3.png',
-							text: 'scan',
+							text: '拍照搜索',
 							action: () => {
 								uni.navigateTo({
 									url: '../repair_bill/repair_bill_list?plateNumber=浙AK162Y'
@@ -108,28 +108,33 @@
 						},
 					]
 				}, {
-					categoryName: "Item",
+					categoryName: "项目",
 					items: [{
 							icon: '../../static/c1.png',
-							text: 'new',
+							text: '新建',
 							url: '../repair_item/repair_item'
 						},
 						{
 							icon: '../../static/c2.png',
-							text: 'list',
+							text: '列表',
 							url: '../repair_item/repair_item_list'
 						},
 					]
 				}, {
-					categoryName: "Wash",
+					categoryName: "洗车",
 					items: [{
 							icon: '../../static/c1.png',
-							text: 'newWashVip',
+							text: '办卡',
 							url: '../wash/wash_edit'
 						},
 						{
 							icon: '../../static/c2.png',
-							text: 'manage'
+							text: '拍照洗车',
+							action: () => {
+								uni.navigateTo({
+									url: '../wash/wash_record?plateNumber=浙AK162Y'
+								})
+							},
 						},
 					]
 				}]

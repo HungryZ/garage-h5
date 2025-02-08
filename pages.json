@@ -30,6 +30,11 @@
 		"style": {
 			"navigationBarTitleText": "新增洗车会员"
 		}
+	}, {
+		"path": "pages/wash/wash_record",
+		"style": {
+			"navigationBarTitleText": "洗车记录"
+		}
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
