@@ -21,12 +21,12 @@
 				categorys: [{
 					categoryName: "维修记录",
 					items: [{
-							icon: '../../static/c1.png',
+							icon: '../../static/bill.png',
 							text: '新建',
 							url: '../repair_bill/repair_bill'
 						},
 						{
-							icon: '../../static/c2.png',
+							icon: '../../static/scan.png',
 							text: '拍照搜索',
 							action: () => {
 								this.$ocr.takePhotoAndRecognizePlateNumber().then((res) => {
@@ -38,7 +38,7 @@
 							}
 						},
 						{
-							icon: '../../static/c3.png',
+							icon: '../../static/search.png',
 							text: '输入搜索',
 							action: () => {
 								uni.showModal({
@@ -60,12 +60,12 @@
 				}, {
 					categoryName: "项目",
 					items: [{
-							icon: '../../static/c1.png',
+							icon: '../../static/item.png',
 							text: '新建',
 							url: '../repair_item/repair_item'
 						},
 						{
-							icon: '../../static/c2.png',
+							icon: '../../static/list.png',
 							text: '列表',
 							url: '../repair_item/repair_item_list'
 						},
@@ -73,12 +73,12 @@
 				}, {
 					categoryName: "洗车",
 					items: [{
-							icon: '../../static/c1.png',
+							icon: '../../static/banka.png',
 							text: '办卡',
 							url: '../wash/wash_edit'
 						},
 						{
-							icon: '../../static/c2.png',
+							icon: '../../static/wash.png',
 							text: '拍照洗车',
 							action: () => {
 								this.$ocr.takePhotoAndRecognizePlateNumber().then((res) => {
@@ -90,7 +90,7 @@
 							},
 						},
 						{
-							icon: '../../static/c3.png',
+							icon: '../../static/search.png',
 							text: '输入洗车',
 							action: () => {
 								uni.showModal({

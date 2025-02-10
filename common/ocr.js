@@ -52,10 +52,6 @@ export default {
 					}
 				},
 				fail(err) {
-					uni.showToast({
-						title: '拍照失败',
-						icon: 'error'
-					});
 					reject()
 				},
 			})

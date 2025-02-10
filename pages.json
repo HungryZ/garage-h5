@@ -2,27 +2,27 @@
 	"pages": [{
 		"path": "pages/index/index",
 		"style": {
-			"navigationBarTitleText": "标题标题标题"
+			"navigationBarTitleText": "铠驰汽车养护中心"
 		}
 	}, {
 		"path": "pages/repair_bill/repair_bill",
 		"style": {
-			"navigationBarTitleText": "标题标题标题"
+			"navigationBarTitleText": "维修记录"
 		}
 	}, {
 		"path": "pages/repair_bill/repair_bill_list",
 		"style": {
-			"navigationBarTitleText": "标题标题标题"
+			"navigationBarTitleText": "记录列表"
 		}
 	}, {
 		"path": "pages/repair_item/repair_item",
 		"style": {
-			"navigationBarTitleText": "标题标题标题"
+			"navigationBarTitleText": "维修项目"
 		}
 	}, {
 		"path": "pages/repair_item/repair_item_list",
 		"style": {
-			"navigationBarTitleText": "标题标题标题",
+			"navigationBarTitleText": "项目列表",
 			"enablePullDownRefresh": true
 		}
 	}, {
@@ -38,7 +38,7 @@
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "标题标题标题",
+		"navigationBarTitleText": "铠驰汽车养护中心",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"app-plus": {
