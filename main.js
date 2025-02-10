@@ -3,7 +3,7 @@ import Vue from 'vue'
 import App from './App'
 
 Vue.config.productionTip = false
-Vue.prototype.$req = req
+Vue.prototype.$ocr = ocr
 
 App.mpType = 'app'
 
@@ -18,10 +18,10 @@ import {
 	createSSRApp
 } from 'vue'
 import App from './App.vue'
-import req from "@/common/request.js"
+import ocr from "@/common/ocr.js"
 export function createApp() {
 	const app = createSSRApp(App)
-	app.config.globalProperties.$req = req
+	app.config.globalProperties.$ocr = ocr
 	return {
 		app
 	}

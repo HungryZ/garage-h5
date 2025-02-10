@@ -11,10 +11,10 @@
 				</view>
 				<view class="uni-btn-v">
 					<div v-if="canEdit">
-						<button form-type="submit">Submit</button>
-						<button class="button-delete" @click="deleteButtonClicked()" v-if="type == 1 && canEdit">Delete</button>
+						<button form-type="submit">提交</button>
+						<button class="button-delete" @click="deleteButtonClicked()" v-if="type == 1 && canEdit">删除</button>
 					</div>
-					<button @click="editButtonClicked()" v-else>Edit</button>
+					<button @click="editButtonClicked()" v-else>编辑</button>
 				</view>
 			</form>
 		</view>

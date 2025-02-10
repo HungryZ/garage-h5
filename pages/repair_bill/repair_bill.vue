@@ -6,8 +6,12 @@
 				<div class="hint">基础信息</div>
 				<view class="basic-item gar-flex bottom-border" v-for="property in propertys" :key="property.id">
 					<view class="gar-content">{{property.title}}</view>
-					<input class="uni-input" :disabled="!canEdit" :name="property.name" placeholder="placeholder"
-						v-model="property.value" />
+					<div class="gar-flex-row">
+						<input class="uni-input" :disabled="!canEdit" :name="property.name"
+							:placeholder="property.title" v-model="property.value" />
+						<image class="item-image" v-if="property.name == 'plateNumber'" @click="onScan"
+							src="../../static/scan.png" mode="aspectFill"></image>
+					</div>
 				</view>
 				<div class="gar-flex" style="padding-top: 30rpx;">
 					<div class="hint">项目</div>
@@ -32,13 +36,13 @@
 				</view>
 				<view class="uni-btn-v">
 					<div v-if="canEdit">
-						<button form-type="submit">Submit</button>
+						<button form-type="submit">提交</button>
 						<div v-if="canEdit && type == 1">
-							<button class="button-delete" @click="deleteButtonClicked()">Delete</button>
-							<button class="button-cancel" @click="cancelButtonClicked()">Cancel</button>
+							<button class="button-delete" @click="deleteButtonClicked()">删除</button>
+							<button class="button-cancel" @click="cancelButtonClicked()">取消</button>
 						</div>
 					</div>
-					<button @click="editButtonClicked()" v-else>Edit</button>
+					<button @click="editButtonClicked()" v-else>编辑</button>
 				</view>
 			</form>
 		</view>
@@ -310,7 +314,14 @@
 				this.propertys[5].value = this.bill.operator
 				this.repairItems = JSON.parse(JSON.stringify(this.bill.items)) // 重新生成对象，否则会被同步修改
 				this.updateTotalAmount()
-			}
+			},
+			onScan() {
+				if (this.canEdit) {
+					this.$ocr.takePhotoAndRecognizePlateNumber().then((res) => {
+						this.propertys[0].value = res
+					})
+				}
+			},
 		}
 	}
 </script>
@@ -335,6 +346,11 @@
 		font-size: 36rpx;
 		text-align: right;
 		height: 48rpx;
+	}
+
+	.item-image {
+		width: 30rpx;
+		height: 30rpx;
 	}
 
 	.add-button {

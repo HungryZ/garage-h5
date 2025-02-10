@@ -27,83 +27,33 @@
 						},
 						{
 							icon: '../../static/c2.png',
-							text: '输入车牌搜索',
+							text: '拍照搜索',
 							action: () => {
-								uni.navigateTo({
-									url: '../repair_bill/repair_bill_list?plateNumber=888'
+								this.$ocr.takePhotoAndRecognizePlateNumber().then((res) => {
+									uni.navigateTo({
+										url: '../repair_bill/repair_bill_list?plateNumber=' +
+											res,
+									});
 								})
-								return
 							}
 						},
 						{
 							icon: '../../static/c3.png',
-							text: '拍照搜索',
+							text: '输入搜索',
 							action: () => {
-								uni.navigateTo({
-									url: '../repair_bill/repair_bill_list?plateNumber=浙AK162Y'
-								})
-								return
-								// 选择图片
-								wx.chooseMedia({
-									count: 1,
-									mediaType: ['image'],
-									sourceType: ['camera'],
-									sizeType: ['compressed'],
-									camera: 'back',
-									success: async function(res) {
-										uni.showLoading({
-											title: '识别中···'
-										})
-										try {
-											const invokeRes = await wx.serviceMarket
-												.invokeService({
-													service: 'wx79ac3de8be320b71',
-													api: 'OcrAllInOne',
-													data: {
-														// 用 CDN 方法标记要上传并转换成 HTTP URL 的文件
-														img_url: new wx.serviceMarket.CDN({
-															type: 'filePath',
-															filePath: res
-																.tempFiles[0]
-																.tempFilePath,
-														}),
-														data_type: 3,
-														ocr_type: 10
-													},
-												})
-											console.log('invokeService success', invokeRes)
-											uni.hideLoading()
-											if (invokeRes.errMsg == 'invokeService:ok') {
-												let plateNum = invokeRes.data.plate_num_res
-													.number.text
-												uni.navigateTo({
-													url: '../repair_bill/repair_bill_list?plateNumber=' +
-														plateNum,
-												});
-											} else {
-												uni.showToast({
-													title: '识别失败',
-													icon: 'error'
-												});
-											}
-										} catch (err) {
-											console.error('invokeService fail', err)
-											uni.showToast({
-												title: '识别失败',
-												icon: 'error'
-											});
+								uni.showModal({
+									title: '输入车牌号进行搜索',
+									editable: true,
+									placeholderText: '车牌号',
+									success: function(res) {
+										if (res.confirm) {
+											uni.navigateTo({
+												url: '../repair_bill/repair_bill_list?plateNumber=' +
+													res.content
+											})
 										}
-									},
-									fail(err) {
-										uni.showToast({
-											title: '拍照失败',
-											icon: 'error'
-										});
-									},
+									}
 								})
-								/*
-								
-								*/
 							}
 						},
 					]
@@ -131,10 +81,32 @@
 							icon: '../../static/c2.png',
 							text: '拍照洗车',
 							action: () => {
-								uni.navigateTo({
-									url: '../wash/wash_record?plateNumber=浙AK162Y'
+								this.$ocr.takePhotoAndRecognizePlateNumber().then((res) => {
+									uni.navigateTo({
+										url: '../wash/wash_record?plateNumber=' +
+											res,
+									})
 								})
 							},
+						},
+						{
+							icon: '../../static/c3.png',
+							text: '输入洗车',
+							action: () => {
+								uni.showModal({
+									title: '输入车牌号进行搜索',
+									editable: true,
+									placeholderText: '车牌号',
+									success: function(res) {
+										if (res.confirm) {
+											uni.navigateTo({
+												url: '../wash/wash_record?plateNumber=' +
+													res.content
+											})
+										}
+									}
+								})
+							}
 						},
 					]
 				}]
