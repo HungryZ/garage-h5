@@ -37,12 +37,15 @@
 				<view class="uni-btn-v">
 					<div v-if="canEdit">
 						<button form-type="submit">提交</button>
-						<div v-if="canEdit && type == 1">
+						<div v-if="type == 1">
 							<button class="button-delete" @click="deleteButtonClicked()">删除</button>
 							<button class="button-cancel" @click="cancelButtonClicked()">取消</button>
 						</div>
 					</div>
-					<button @click="editButtonClicked()" v-else>编辑</button>
+					<div v-else>
+						<button @click="editButtonClicked()">编辑</button>
+						<button @click="onPrint">打印</button>
+					</div>
 				</view>
 			</form>
 		</view>
@@ -322,6 +325,11 @@
 					})
 				}
 			},
+			onPrint() {
+				uni.navigateTo({
+					url: 'repair_bill_form?bill=' + JSON.stringify(this.bill),
+				});
+			}
 		}
 	}
 </script>

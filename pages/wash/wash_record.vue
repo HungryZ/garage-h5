@@ -6,10 +6,10 @@
 				<div class="hint">基础信息</div>
 				<view class="basic-item gar-flex bottom-border" v-for="property in propertys" :key="property.id">
 					<view class="gar-content">{{property.title}}</view>
-					<input class="uni-input" :disabled="!canEdit" :name="property.name" placeholder="placeholder"
+					<input class="uni-input" :disabled="!canEdit" :name="property.name" :placeholder="property.title"
 						v-model="property.value" />
 				</view>
-				<button class="uni-btn-v" @click="washClicked">洗车一次</button>
+				<button class="uni-btn-v" @click="washClicked">新增洗车一次</button>
 				<div class="gar-flex" style="padding-top: 30rpx;">
 					<div class="hint">洗车记录</div>
 				</div>

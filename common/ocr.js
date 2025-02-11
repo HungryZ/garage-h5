@@ -31,9 +31,17 @@ export default {
 							})
 						console.log('invokeService success', invokeRes)
 						uni.hideLoading()
+						var plateNum
 						if (invokeRes.errMsg == 'invokeService:ok') {
-							let plateNum = invokeRes.data.plate_num_res
-								.number.text
+							const plateNumJson = invokeRes.data.plate_num_res
+								.number
+							if (plateNumJson != null) {
+								if (plateNumJson.text && plateNumJson.text.length > 0) {
+									plateNum = plateNumJson.text
+								}
+							}
+						}
+						if (plateNum) {
 							resolve(plateNum)
 						} else {
 							uni.showToast({

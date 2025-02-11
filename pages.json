@@ -15,6 +15,11 @@
 			"navigationBarTitleText": "记录列表"
 		}
 	}, {
+		"path": "pages/repair_bill/repair_bill_form",
+		"style": {
+			"navigationBarTitleText": "铠驰汽车养护中心"
+		}
+	}, {
 		"path": "pages/repair_item/repair_item",
 		"style": {
 			"navigationBarTitleText": "维修项目"
