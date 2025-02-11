@@ -6,13 +6,14 @@
 				<div class="hint">基础信息</div>
 				<view class="basic-item gar-flex bottom-border" v-for="property in properties" :key="property.title">
 					<view class="gar-title">{{property.title}}</view>
-					<input class="uni-input" :disabled="!canEdit" :name="property.name" placeholder="placeholder"
+					<input class="uni-input" :disabled="!canEdit" :name="property.name" :placeholder="property.title"
 						v-model="property.value" />
 				</view>
 				<view class="uni-btn-v">
 					<div v-if="canEdit">
 						<button form-type="submit">提交</button>
-						<button class="button-delete" @click="deleteButtonClicked()" v-if="type == 1 && canEdit">删除</button>
+						<button class="button-delete" @click="deleteButtonClicked()"
+							v-if="type == 1 && canEdit">删除</button>
 					</div>
 					<button @click="editButtonClicked()" v-else>编辑</button>
 				</view>
@@ -55,8 +56,7 @@
 				console.log('form发生了submit事件，携带数据为：' + JSON.stringify(e.detail.value))
 				console.log(this.properties)
 				// 定义表单规则
-				var rule = [
-					{
+				var rule = [{
 						name: "name",
 						checkType: "notnull",
 						checkRule: "",
@@ -131,6 +131,9 @@
 				})
 			},
 			createItem(item) {
+				uni.showLoading({
+					mask: true
+				})
 				wx.cloud.callFunction({
 					name: 'add',
 					data: {
@@ -138,6 +141,10 @@
 						data: item
 					},
 					success: res => {
+						uni.showToast({
+							icon: 'success',
+							title: '创建成功',
+						})
 						console.log('[云函数] [add] 调用成功：', res.result)
 						this.canEdit = false
 					},
@@ -151,6 +158,9 @@
 				})
 			},
 			updateItem(item) {
+				uni.showLoading({
+					mask: true
+				})
 				wx.cloud.callFunction({
 					name: 'update',
 					data: {
@@ -161,6 +171,10 @@
 					success: res => {
 						console.log('[云函数] [update] 调用成功：', res.result)
 						this.canEdit = false
+						uni.showToast({
+							icon: 'success',
+							title: '更新成功',
+						})
 					},
 					fail: err => {
 						console.error('[云函数] [update] 调用失败', err)

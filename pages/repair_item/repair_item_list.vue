@@ -1,5 +1,7 @@
 <template>
 	<view vfor>
+		<button @click="newClicked">新建项目</button>
+		<uni-search-bar placeholder="输入关键字进行搜索" @confirm="search" v-model="keyword"></uni-search-bar>
 		<template v-for="(item, index) in items" :key="index">
 			<div class="gar-flex item-row" @click="rowClicked(item)"
 				style="background-color: {{index % 2 ? '#f5f5f5' : 'white'}};">
@@ -17,6 +19,7 @@
 				// 0:展示列表, 1:选择项目
 				type: 0,
 				hasMoreData: true,
+				keyword: '',
 				items: [],
 			}
 		},
@@ -26,25 +29,24 @@
 			}
 		},
 		onShow() {
-			this.selectItemsByName('')
+			if (this.keyword.length > 0) {
+				this.search()
+			}
 		},
-		onPullDownRefresh() {
-			
-		},
-		onReachBottom() {
-
-		},
+		onPullDownRefresh() {},
+		onReachBottom() {},
 		methods: {
-			selectItemsByName(name) {
+			search(res) {
 				wx.showLoading({
-					mask: true
+					mask: true,
+					title: this.keyword,
 				})
 				wx.cloud.callFunction({
 					name: 'regexp-search',
 					data: {
 						collectionName: 'repair-item',
 						field: 'name',
-						value: name,
+						value: this.keyword,
 					},
 					success: res => {
 						wx.hideLoading()
@@ -74,6 +76,11 @@
 					});
 					uni.navigateBack()
 				}
+			},
+			newClicked() {
+				uni.navigateTo({
+					url: '../repair_item/repair_item'
+				})
 			},
 		},
 	}

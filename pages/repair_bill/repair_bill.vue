@@ -9,7 +9,7 @@
 					<div class="gar-flex-row">
 						<input class="uni-input" :disabled="!canEdit" :name="property.name"
 							:placeholder="property.title" v-model="property.value" />
-						<image class="item-image" v-if="property.name == 'plateNumber'" @click="onScan"
+						<image class="item-image" v-if="canEdit && property.name == 'plateNumber'" @click="onScan"
 							src="../../static/scan.png" mode="aspectFill"></image>
 					</div>
 				</view>
