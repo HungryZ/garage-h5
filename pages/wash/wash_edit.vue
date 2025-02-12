@@ -4,7 +4,7 @@
 		<view>
 			<form @submit="formSubmit" @reset="formReset">
 				<div class="hint">基础信息</div>
-				<view class="basic-item gar-flex bottom-border" v-for="property in propertys" :key="property.id">
+				<view class="basic-item gar-flex bottom-border" v-for="property in properties" :key="property.id">
 					<view class="gar-content">{{property.title}}</view>
 					<input class="uni-input" :disabled="!canEdit" :name="property.name" :placeholder="property.title"
 						v-model="property.value" />
@@ -17,7 +17,7 @@
 							<button class="button-cancel" @click="cancelButtonClicked()">取消</button>
 						</div>
 					</div>
-					<button @click="editButtonClicked()" v-else>Edit</button>
+					<button @click="editButtonClicked()" v-else>编辑</button>
 				</view>
 			</form>
 		</view>
@@ -31,7 +31,7 @@
 				type: 0, // 0 add, 1 update
 				canEdit: true,
 				car: {},
-				propertys: [{
+				properties: [{
 					title: '车牌号',
 					name: 'plateNumber',
 					value: null,
@@ -45,7 +45,15 @@
 			}
 		},
 		onLoad(e) {
-
+			if (e.car) {
+				console.log('wash_edit')
+				console.log(e.car)
+				this.canEdit = false
+				this.type = 1
+				this.car = JSON.parse(e.car)
+				this.properties[0].value = this.car.plateNumber
+				this.properties[1].value = this.car.washTimesLeft
+			}
 		},
 		methods: {
 			formSubmit: function(e) {
@@ -113,9 +121,9 @@
 					wx.cloud.callFunction({
 						name: 'update',
 						data: {
-							collectionName: 'repair-bill',
-							_id: this.bill._id,
-							data: this.bill
+							collectionName: 'car-info',
+							_id: this.car._id,
+							data: this.car
 						},
 						success: res => {
 							console.log('[云函数] [update] 调用成功：', res.result)
@@ -140,6 +148,8 @@
 			},
 			cancelButtonClicked() {
 				this.canEdit = false
+				this.properties[0].value = this.car.plateNumber
+				this.properties[1].value = this.car.washTimesLeft
 			},
 			deleteButtonClicked() {
 				uni.showModal({
@@ -153,8 +163,8 @@
 							wx.cloud.callFunction({
 								name: 'remove',
 								data: {
-									collectionName: 'repair-bill',
-									_id: this.bill._id
+									collectionName: 'car-info',
+									_id: this.car._id
 								},
 								success: res => {
 									wx.hideLoading()

@@ -73,11 +73,6 @@
 				}, {
 					categoryName: "洗车",
 					items: [{
-							icon: '../../static/banka.png',
-							text: '办卡',
-							url: '../wash/wash_edit'
-						},
-						{
 							icon: '../../static/wash.png',
 							text: '拍照洗车',
 							action: () => {
@@ -107,6 +102,14 @@
 									}
 								})
 							}
+						}, {
+							icon: '../../static/banka.png',
+							text: '办卡',
+							url: '../wash/wash_edit'
+						}, {
+							icon: '../../static/vip_manage.png',
+							text: '会员管理',
+							url: '../wash/wash_vip_list'
 						},
 					]
 				}]
@@ -146,7 +149,7 @@
 
 	.item {
 		text-align: center;
-		width: 160rpx;
+		width: 150rpx;
 		/* height: 160rpx; */
 		font-size: 26rpx;
 		padding: 10rpx 10rpx 10rpx 0rpx;
