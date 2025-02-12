@@ -80,6 +80,7 @@
 					});
 					return
 				}
+				formData.date = new Date()
 				if (this.type == 0) {
 					this.createItem(formData)
 				} else {
