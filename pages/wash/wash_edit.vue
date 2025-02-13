@@ -46,8 +46,6 @@
 		},
 		onLoad(e) {
 			if (e.car) {
-				console.log('wash_edit')
-				console.log(e.car)
 				this.canEdit = false
 				this.type = 1
 				this.car = JSON.parse(e.car)
@@ -152,6 +150,7 @@
 				this.properties[1].value = this.car.washTimesLeft
 			},
 			deleteButtonClicked() {
+				let that = this
 				uni.showModal({
 					content: '确定删除吗',
 					confirmColor: '#f00',
@@ -164,7 +163,7 @@
 								name: 'remove',
 								data: {
 									collectionName: 'car-info',
-									_id: this.car._id
+									_id: that.car._id
 								},
 								success: res => {
 									wx.hideLoading()

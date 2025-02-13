@@ -87,11 +87,6 @@
 					this.updateItem(formData)
 				}
 			},
-			resetItemsValue: function(e) {
-				this.properties.forEach(property => {
-					property.value = null
-				})
-			},
 			editButtonClicked() {
 				this.canEdit = true
 			},
