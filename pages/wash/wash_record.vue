@@ -62,9 +62,27 @@
 					success: res => {
 						uni.hideLoading()
 						console.log('[云函数] [regexp-search] 调用成功：', res.result)
-						this.car = res.result.data[0]
-						this.propertys[0].value = this.car.plateNumber
-						this.propertys[1].value = this.car.washTimesLeft
+						const data = res.result.data
+						if (data.length > 1) {
+							const that = this
+							const plateNumbers = data.map(item => item.plateNumber)
+							uni.showActionSheet({
+								title:'选择具体车牌',
+								itemList: plateNumbers,
+								success: function(res) {
+									that.car = data[res.tapIndex]
+									that.propertys[0].value = that.car.plateNumber
+									that.propertys[1].value = that.car.washTimesLeft
+								},
+								fail: function(res) {
+									uni.navigateBack()
+								}
+							})
+						} else {
+							this.car = data[0]
+							this.propertys[0].value = this.car.plateNumber
+							this.propertys[1].value = this.car.washTimesLeft
+						}
 					},
 					fail: err => {
 						console.error('[云函数] [regexp-search] 调用失败', err)
@@ -175,7 +193,7 @@
 		text-align: right;
 		height: 48rpx;
 	}
-	
+
 	.uni-btn-v {
 		margin: 50rpx;
 	}
